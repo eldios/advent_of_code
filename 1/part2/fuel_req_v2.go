@@ -42,26 +42,27 @@ func main() {
 			log.Fatal(err)
 		}
 
-		totalFuel = totalFuel + calculateFuel(moduleMass)
+		if *debug {
+			fmt.Printf("Module Mass: %v\n", moduleMass)
+		}
+		totalFuel = totalFuel + calculateFuel(int64(moduleMass), debug)
 	}
 	if *debug {
 		fmt.Printf("Total fuel (delta not included): %v\n", totalFuel)
 	}
 
-	deltaFuel := totalFuel
-	for deltaFuel > 0 {
-		deltaFuel = calculateFuel(float64(deltaFuel))
-		if *debug {
-			fmt.Printf("Delta fuel: %v\n", deltaFuel)
-		}
-		if deltaFuel > 0 {
-			totalFuel = totalFuel + deltaFuel
-		}
-	}
-
 	fmt.Printf("Total fuel (delta included):     %v\n", totalFuel)
 }
 
-func calculateFuel(fuel float64) int64 {
-	return int64(math.Floor(fuel/3) - 2)
+func calculateFuel(fuel int64, debug *bool) int64 {
+	deltaFuel := int64(math.Floor(float64(fuel)/3) - 2)
+	if *debug {
+		fmt.Printf("%v -> %v\n", fuel, deltaFuel)
+	}
+	if deltaFuel > 0 {
+		deltaFuel = deltaFuel + calculateFuel(deltaFuel, debug)
+		return deltaFuel
+	} else {
+		return 0
+	}
 }

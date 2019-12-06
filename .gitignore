@@ -10,5 +10,5 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-1/fuel_req
-2/fuel_req_v2
+1/part1/fuel_req
+1/part2/fuel_req_v2
